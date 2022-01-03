@@ -1,0 +1,34 @@
+ValidationError(
+apitools.base.protorpclite.messages.ValidationError: 
+Expected type <class 'apache_beam.io.gcp.internal.clients.bigquery.bigquery_v2_messages.TableSchema'> for field schema, 
+found Brooklyn_room_type:STRING,Manhattan_room_type:STRING,host_name:STRING,Bronx_room_type:STRING,Staten_Island_room_type:STRING,Queens_room_type:STRING 
+(type <class 'str'>) 
+[while running 'Write/BigQueryBatchFileLoads/TriggerLoadJobsWithoutTempTables/TriggerLoadJobsWithoutTempTables']
+
+
+...
+
+AttributeError: 'FieldList' object has no attribute '_FieldList__field' 
+[while running 'Write/BigQueryBatchFileLoads/ParDo(WriteRecordsToFile)/ParDo(WriteRecordsToFile)/ParDo(WriteRecordsToFile)']
+
+
+schema (str,dict,ValueProvider,callable) – The schema to be used if the BigQuery table to write has to be created. 
+This can be either specified as a TableSchema. or a ValueProvider that has a JSON string, or a python dictionary, 
+or the string or dictionary itself, object or a single string of the form 'field1:type1,field2:type2,field3:type3' 
+that defines a comma separated list of fields. Here 'type' should specify the BigQuery type of the field. 
+Single string based schemas do not support nested fields, repeated fields, or specifying a BigQuery mode for fields 
+(mode will always be set to 'NULLABLE'). 
+If a callable, then it should receive a destination 
+(in the form of a str, and return a str, dict or TableSchema). 
+One may also pass SCHEMA_AUTODETECT here when using JSON-based file loads, 
+and BigQuery will try to infer the schema for the files that are being loaded.
+
+
+...
+ModuleNotFoundError: No module named 'bq_T'
+...
+
+File "/usr/local/lib/python3.8/site-packages/apache_beam/io/gcp/bigquery_file_loads.py", line 606, in process
+    schema = self.schema(destination, *schema_side_inputs)
+TypeError: get_table_schema_from_string() takes 1 positional argument but 2 were given 
+[while running 'Write/BigQueryBatchFileLoads/TriggerLoadJobsWithoutTempTables/TriggerLoadJobsWithoutTempTables']
