@@ -26,6 +26,7 @@ from apache_beam.io import WriteToBigQuery
 from apache_beam.transforms.core import RestrictionProvider
 from apache_beam.io.range_trackers import OffsetRangeTracker
 from apache_beam.transforms.ptransform import _create_transform
+# from apache_beam.DoFn import Re
 
 #----------------------------------------------------------------------
 # SPLITTABLE DOFN IS TOUGH, SO LET'S DO THIS IN MEMORY 
@@ -33,8 +34,8 @@ from apache_beam.transforms.ptransform import _create_transform
 #--------------SET OPTIONS-----------------------------------------
 parser = argparse.ArgumentParser()
 parser.add_argument('--input-csv', default = 'gs://airbnb-nyc-19/AB_NYC_2019.csv')
-parser.add_argument('--main-bq-table', default='bnb_19.bnb_table')
-parser.add_argument('--counts-bq-table', default='bnb_19.nhood_counts')
+parser.add_argument('--main-bq-table', default='bnb_19_sdf.bnb_table')
+parser.add_argument('--counts-bq-table', default='bnb_19_sdf.nhood_counts')
 
 app_args, pipeline_args = parser.parse_known_args()
 
@@ -60,40 +61,45 @@ class PitchingCoach(RestrictionProvider):
         start_stop = (0, self.client.size(self.path)) # (0, 7074793) for input_csv == AB_NYC_2019.csv
         return start_stop
 
-    def create_tracker(self, restriction) -> beam.iobase.RestrictionTracker:
+    def create_tracker(self, restriction):
         tracker = OffsetRangeTracker(*restriction)
         # tracker = OffsetRestrictionTracker(OffsetRange(*restriction))
         return tracker
 
-    def restriction_size(self, element, restriction):
-        """Returns the size of a restriction with respect to the given element.
-        By default, asks a newly-created restriction tracker for the default size
-        of the restriction."""
-        #ok, so shot in the dark here...
-        return tracker. fraction_claimed?
+    # def restriction_size(self, element, restriction):
+    #     """Returns the size of a restriction with respect to the given element.
+    #     By default, asks a newly-created restriction tracker for the default size
+    #     of the restriction."""
+    #     #ok, so shot in the dark here...
+    #     return tracker. fraction_claimed?
 
  
-    def split(self, restriction, num_parts):
-        start, stop = restriction
-        range_size = (stop - start) // num_parts
-        current_start = start
-        current_stop = stop
-        while current_start <= current_stop:
-            current_stop = min(current_start + range_size, stop)
-            yield (current_start, current_stop)
-            current_start = current_stop
+    # def split(self, restriction, num_parts):
+    #     start, stop = restriction
+    #     range_size = (stop - start) // num_parts
+    #     current_start = start
+    #     current_stop = stop
+    #     while current_start <= current_stop:
+    #         current_stop = min(current_start + range_size, stop)
+    #         yield (current_start, current_stop)
+    #         current_start = current_stop
     
 
+# class MyRP(RestrictionProvider):
+#   def initial_restriction(self, file_name):
+#     return OffsetRange(0, os.stat(file_name).st_size)
+#   def create_tracker(self, restriction):
+#     return beam.io.restriction_trackers.OffsetRestrictionTracker()
 
-
-    # def restriction_coder(self):
-    #     return super().restriction_coder()
-    # def split(self, element, restriction):
-    #     return super().split(element, restriction)
-    # def split_and_size(self, element, restriction):
-    #     return super().split_and_size(element, restriction)
-    # def truncate(self, element, restriction):
-    #     return super().truncate(element, restriction)
+# class FileToWordsFn(beam.DoFn):
+#   def process(
+#       self,
+#       file_name,
+#       tracker=beam.DoFn.RestrictionParam(MyRP())):
+#     with open(file_name) as file_handle:
+#       file_handle.seek(tracker.current_restriction.start())
+#       while tracker.try_claim(file_handle.tell()):
+#         yield read_next_record(file_handle)
 
 class LoadCSV(beam.DoFn):
 
@@ -101,29 +107,16 @@ class LoadCSV(beam.DoFn):
         self.client = GcsIO()
         self.path = gcs_path
 
-    def process(self, tracker = PitchingCoach()): # NOT SURE ABOUT THIS TRACKER PARAM
-
+    def process(self, tracker = beam.DoFn.RestrictionParam(PitchingCoach())):
         with self.client.open(self.path, mode = 'rb') as csv_file:
-        
             start, stop = tracker.current_restriction()
             csv_file.seek(start)
-
-            csv_dict = DictReader(
-                TextIOWrapper(csv_file, newline = '', errors = 'replace'),
-                fieldnames = fieldnames)
-        
-            # more logic here, like try_claim and try_split
-
-            for row in csv_dict:
-                yield row
-
-
-
-
-
-
-
-
+            while tracker.try_claim(csv_file.tell()):
+                next(DictReader(TextIOWrapper(
+                    csv_file, newline = '', errors = 'replace'),
+                    fieldnames = fieldnames))
+                #     for row in csv_dict:
+                #         yield row
 
 
 fieldnames = [
@@ -146,21 +139,6 @@ fieldnames = [
 
 # "all tracker types have a tryClaim(P) operation: inside processElement(), 
 # the SDF repeatedly consults the tracker using tryClaim(P) to claim a new block of work at position P
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # class LoadCSV():
@@ -231,13 +209,13 @@ def run():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--input-csv',
-        required = True,
+        # required = True,
         default = 'gs://airbnb-nyc-19/AB_NYC_2019.csv',
         help = "File path in Google Cloud Storage, 'gs://...'.")
     parser.add_argument(
-        '--main-bq-table', required=True, default='bnb_19.bnb_table')
+        '--main-bq-table', default='bnb_19_sdf.bnb_table')
     parser.add_argument(
-        '--counts-bq-table', required=True, default='bnb_19.nhood_counts')
+        '--counts-bq-table', default='bnb_19_sdf.nhood_counts')
 
     app_args, pipeline_args = parser.parse_known_args()
 
@@ -253,18 +231,13 @@ def run():
         save_main_session = True # so workers can access imported modules
         )
 
-    #--------------READ AND PARSE SIDE INPUTS--------------------------
-    loader = LoadCSV()
-    csv_dicts = loader.process()
-
     #--------------STAGE PIPELINE--------------------------------------
 
     with beam.Pipeline(options=pipeline_options) as p:
 
-
         pcoll = (
             p 
-            | 'create_from_memory' >> beam.Create(csv_dicts)
+            | 'sdf_read_csv' >> beam.ParDo(LoadCSV())
             | 'format_bnb' >> beam.ParDo(FormatBNB())
             )
 
