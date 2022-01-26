@@ -1,9 +1,10 @@
 
 
 import datetime
-from typing import NamedTuple
 import apache_beam as beam
-from bq_pivot_beam_functions.pivot_functions import order_fields
+
+from bq_pivot_functions.pivot_functions import order_fields
+
 
 class PivotSchema(beam.PTransform):
 
@@ -20,21 +21,13 @@ class PivotSchema(beam.PTransform):
             | beam.ParDo(
                 FieldSchemas(), self.key_fds, self.piv_fds, self.val_fds)
             | beam.Distinct() 
-            | beam.transforms.combiners.ToList()#..register_schema, revised to start from f_list?
-        )
-
-        new_schema_str = (
-            new_schema_list
+            | beam.transforms.combiners.ToList()
             | beam.Map(order_fields, self.key_fds)
-            | beam.Map(lambda x: ",".join(x))
-        )
-            
-        PivotedRecord = (
-            new_schema_list
-            | beam.Map(register_schema)
         )
 
-        return new_schema_str, PivotedRecord
+        new_schema_str = new_schema_list | beam.Map(lambda x: ",".join(x))
+            
+        return new_schema_list, new_schema_str
 
 
 class FieldSchemas(beam.DoFn):
@@ -71,13 +64,3 @@ class FieldSchemas(beam.DoFn):
                 if v:
                     bq_type = self.map[type(v)]
                     yield ":".join([col, bq_type])
-
-def register_schema(schema_list):
-    map = {"STRING":str, "INTEGER":int}
-
-    f_lists = [f.split(":") for f in schema_list]
-    f_tuples = [((f[0], map[f[1]])) for f in f_lists]
-    
-    PivotedRecord = NamedTuple('PivotedRecord', f_tuples)
-    
-    return PivotedRecord

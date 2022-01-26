@@ -19,19 +19,9 @@ service_account: practice-springml@appspot.gserviceaccount.com
 service: default
 # entrypoint: gunicorn -b :8080 -w 1 Bnb19AppAPI:app
 entrypoint: gunicorn -b :8080 -w 1 main:app
-
-# https://cloud.google.com/appengine/docs/standard/python3/communicating-between-services
-# https://cloud.google.com/vpc/docs/configure-serverless-vpc-access?_ga=2.264287053.-399047954.1640537558#all-other-runtimes
-# https://cloud.google.com/appengine/docs/standard/python3/config/appref
-# https://cloud.google.com/vpc/docs/private-google-access
-# https://cloud.google.com/vpc/images/serverless-vpc-access.svg
-# both?
-# https://cloud.google.com/vpc/docs/apis
-# https://www.coursera.org/learn/networking-gcp-defining-implementing-networks/home/week/1   <-----
-# https://cloud.google.com/vpc-service-controls/docs/create-service-perimeters <-- next level
 default_expiration: "7d 7h"
 vpc_access_connector:
   name: "projects/practice-springml/locations/us-central1/connectors/bnb19-app-api-connector"
   egress_setting: all-traffic
-inbound_services:
-- warmup
+# inbound_services:
+# - warmup

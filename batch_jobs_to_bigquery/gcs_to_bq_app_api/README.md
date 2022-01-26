@@ -1,7 +1,7 @@
-Dataflow batch job
-GCS to BigQuery
-VPC
-Google Private Access
-Only internal IP addresses on Compute Engine VMs
-Serverless Access Connector
-App Engine as simple API
+- Dataflow batch job
+- GCS to BigQuery
+- VPC
+- Google Private Access
+- Only internal IP addresses on Compute Engine VMs
+- Serverless Access Connector
+- App Engine as simple API

@@ -1,11 +1,19 @@
+
+from email.generator import Generator
+from typing import Tuple, List, Dict, Iterable
 import apache_beam as beam
+from apache_beam.pvalue import AsSingleton, AsList, AsIter
+
+from bq_pivot_functions.pivot_functions import fill_fields
+
 
 class PivotRecords(beam.PTransform):
 
-    def __init__(self, args):
+    def __init__(self, args, new_schema_list):
         self.key_fds = args.key_fields
         self.piv_fds = args.pivot_fields
         self.val_fds = args.value_fields
+        self.new_schema_list = new_schema_list
 
     def expand(self, pcollection):
 
@@ -15,8 +23,8 @@ class PivotRecords(beam.PTransform):
             | beam.GroupBy(
                 lambda x: "__".join([str(x[kfd]) for kfd in self.key_fds]))
             | beam.CombinePerKey(CollapsePivoted(), self.key_fds)
-            | beam.ParDo(
-                ReconstrElem(), self.key_fds) #.with_output_types(PivotedRecord)
+            | beam.ParDo(ReconstrElem(), self.key_fds)
+            # | beam.Map(fill_fields, AsSingleton(self.new_schema_list)) # try ParDo with AsSingleton(new_schema_STR)
             )
 
         return pivoted_records
