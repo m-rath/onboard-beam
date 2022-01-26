@@ -28,9 +28,10 @@ def neighbourhood_query():
         for record in jf:
             if nhood in record:
                 return jsonify(record[nhood])
+                
         return jsonify({'error': 'neighbourhood not found'})
 
-                # return jsonify({'status': 'Success'}), 200
+        # return jsonify({'status': 'Success'}), 200
 
 
 @app.route('/_ah/warmup')
