@@ -1,13 +1,16 @@
 """
 Mark Porath, 12-30-21
 
-flawless pivot, based on user input, BQ source and sink;
+BQ source --> pivot --> BQ sink;
+based on user input for key, pivot, value fields;
 dynamic schema in beam python sdk is practically first of its kind :)
 
-practice-springml:bnb19.bnb_table --> bnb_pivoted
+practice-springml:bnb19.bnb_table
+practice-springml:bnb19.bnb_pivoted
 
-based on this java routine:
-<https://github.com/GoogleCloudPlatform/professional-services/tree/main/examples/dataflow-bigquery-transpose>
+roughly based on this java routine:
+<https://github.com/GoogleCloudPlatform/professional-services/tree/
+main/examples/dataflow-bigquery-transpose>
 """
 
 import os
@@ -70,7 +73,7 @@ def run():
         region = 'us-central1',
         temp_location = f'{PIPELINE_FOLDER}/temp',
         staging_location = f'{PIPELINE_FOLDER}/staging',
-        save_main_session = True # so that workers can access imported modules
+        save_main_session = True
         )
 
     #------------------------------------------------------------------

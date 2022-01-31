@@ -17,4 +17,35 @@ goals of Beam PivotTable re-do:
 
 tasks that remain:
 - attach schema to pcollection, even before WriteToBigQuery
-  - register NamedTuple, then lambda x: NT(**x), where x is row Dict
+  - register NamedTuple, then lambda x: NT(**x), where x is row Dict?
+- edit CombineFn to allow for string value fields<br><br><br>
+
+
+
+
+## baby_names.orig_table
+![](..\imgs\orig_table.PNG)
+<br><br>
+
+## baby_names.pivoted_region1
+![](..\imgs\pivot_on_region_then_sum.PNG)
+<br><br>
+
+## baby_names.pivoted_region2
+![](..\imgs\then_pivot_again_on_gender.PNG)
+<br><br>
+
+
+## dataflow job execution graphs
+
+dataflow job execution graph, with regional groupings
+![](..\imgs\job_execution_graph_with_extras.PNG)
+<br><br>
+
+execution graph, collapsed
+![](..\imgs\job_execution_graph_collapsed.PNG)
+<br><br>
+
+execution graph, detailed
+![](..\imgs\job_execution_graph.PNG)
+<br><br>

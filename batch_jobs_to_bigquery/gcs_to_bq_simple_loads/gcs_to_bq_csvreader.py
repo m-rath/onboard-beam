@@ -18,10 +18,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.io.gcp.gcsio import GcsIO
 from apache_beam.io import WriteToBigQuery
 
-#----------------------------------------------------------------------
-# SPLITTABLE DOFN IS TOUGH, SO LET'S DO THIS IN MEMORY 
 
-#--------------SET OPTIONS-----------------------------------------
 parser = argparse.ArgumentParser()
 parser.add_argument('--input-csv', default = 'gs://airbnb-nyc-19/AB_NYC_2019.csv')
 parser.add_argument('--main-bq-table', default='bnb_19.bnb_table')
@@ -107,51 +104,13 @@ schema = [
     "availability_365:INTEGER"]
 schema = "".join([f+',' for f in schema])[:-1]
 
-#------------------MAIN LOGIC------------------------------------------
 
 def run():
 
-    #--------------SET OPTIONS-----------------------------------------
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--input-csv',
-        required = True,
-        default = 'gs://airbnb-nyc-19/AB_NYC_2019.csv',
-        help = "File path in Google Cloud Storage, 'gs://...'.")
-    parser.add_argument(
-        '--main-bq-table', required=True, default='bnb_19.bnb_table')
-    parser.add_argument(
-        '--counts-bq-table', required=True, default='bnb_19.nhood_counts')
-
-    app_args, pipeline_args = parser.parse_known_args()
-
-    pipeline_options = PipelineOptions(
-        pipeline_args,
-        runner = 'DataflowRunner',
-        project = 'practice-springml',
-        region = 'us-central1',
-        # job_name = 'practice-MP',
-        temp_location = 'gs://practice-springml.appspot.com/tmp',
-        # staging_location = 'gs://staging.practice-springml.appspot.com/stg',
-        # template_location = 'gs://practice-job/template',
-        save_main_session = True # so workers can access imported modules
-        )
-
-    #--------------READ AND PARSE SIDE INPUTS--------------------------
     loader = LoadCSV()
     csv_dicts = loader.process()
 
-    #--------------STAGE PIPELINE--------------------------------------
-
     with beam.Pipeline(options=pipeline_options) as p:
-
-        #----------EXTRACT---------------------------------------------
-        # parsed_records, parsing_errors = p | "Extract and Parse" >> ExtractDataTransform(app.args.input_csv)
-
-        #----------TRANSFORM-------------------------------------------
-        # results = parsed_records | "Clean and Calculate" >> PreprocessingTransform(...)
-
-        #----------LOAD------------------------------------------------
 
         pcoll = (
             p 

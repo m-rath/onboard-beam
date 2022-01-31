@@ -131,4 +131,5 @@ dmypy.json
 
 # MP
 MP_*
+*_MP
 # *.json

@@ -4,12 +4,13 @@ Mark Porath, Jan 4 2022
 pivot or transpose, based on user input, from BQ source to BQ sink;
 dynamic schema in beam python sdk is practically first of its kind :)
 
-based on this java routine:
-<https://github.com/GoogleCloudPlatform/professional-services/tree/main/examples/dataflow-bigquery-transpose>
+roughly based on this java routine:
+<https://github.com/GoogleCloudPlatform/professional-services/tree
+/main/examples/dataflow-bigquery-transpose>
 
-with this dataset <https://www.ssa.gov/OACT/babynames/limits.html>;
-as prelim step, bq extract bigquery-public-data:usa_names.usa_1910_current
-to practice-springml:baby_names.pivot_gender_state
+orig dataset: <https://www.ssa.gov/OACT/babynames/limits.html>;
+prelim step: bq extract bigquery-public-data:usa_names.usa_1910_current;
+
 """
 
 import os
@@ -23,6 +24,7 @@ from apache_beam.io.gcp.bigquery_tools import BigQueryWrapper
 from apache_beam.io import ReadFromBigQuery, WriteToBigQuery
 from apache_beam.pvalue import AsSingleton
 from apache_beam.io.gcp.bigquery_tools import get_table_schema_from_string
+
 
 def run():
 
@@ -59,14 +61,12 @@ def run():
 
     pipeline_options = PipelineOptions(
         pipeline_args,
-        # job_name = 'practice-MP',
-        # template_location = 'gs://practice-job/template',
         project = f'{PROJECT_ID}',
         runner = f'{RUNNER}',
         region = 'us-central1',
         temp_location = f'{PIPELINE_FOLDER}/temp',
         staging_location = f'{PIPELINE_FOLDER}/staging',
-        save_main_session = True # so that workers can access imported modules
+        save_main_session = True
         )
 
     #------------------------------------------------------------------

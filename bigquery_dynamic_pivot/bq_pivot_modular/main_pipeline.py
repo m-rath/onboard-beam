@@ -1,8 +1,12 @@
+"""
+Mark Porath, Jan 16 2022
 
-import os
+pivot or transpose, based on user input, from BQ source to BQ sink;
+see README.md for example usage
+"""
+
 import argparse
 import logging
-# from dotenv import load_dotenv
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.io import ReadFromBigQuery, WriteToBigQuery
@@ -12,13 +16,12 @@ from bq_pivot_classes import schemas_transform, records_transform
 from bq_pivot_functions.pivot_functions import *
 # from bq_pivot_beam_classes.preprocessing import StateToRegion
 
-# load_dotenv()
 
 RUNNER = 'DataflowRunner'
 PROJECT_ID = "practice-springml"
 REGION = 'us-central1'
 PIPELINE_FOLDER = "gs://dataflow-staging-us-central1-490138077fc741632143d4fcfb332271"
-SETUP = r"./setup.py"#os.getenv('PATH_TO_SETUP')
+SETUP = r"./setup.py"
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
