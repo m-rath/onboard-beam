@@ -24,28 +24,28 @@ tasks that remain:
 
 
 ## baby_names.orig_table
-![](.\imgs\orig_table.PNG)
+![](./imgs/orig_table.PNG)
 <br><br>
 
 ## baby_names.pivoted_region1
-![](.\imgs\pivot_on_region_then_sum.PNG)
+![](./imgs/pivot_on_region_then_sum.PNG)
 <br><br>
 
 ## baby_names.pivoted_region2
-![](.\imgs\then_pivot_again_on_gender.PNG)
+![](./imgs/then_pivot_again_on_gender.PNG)
 <br><br>
 
 
 ## dataflow job execution graphs
 
 dataflow job execution graph, with regional groupings
-![](.\imgs\job_execution_graph_with_extras.PNG)
+![](./imgs/job_execution_graph_with_extras.PNG)
 <br><br>
 
 execution graph, collapsed
-![](.\imgs\job_execution_graph_collapsed.PNG)
+![](./imgs/job_execution_graph_collapsed.PNG)
 <br><br>
 
 execution graph, detailed
-![](.\imgs\job_execution_graph.PNG)
+![](./imgs/job_execution_graph.PNG)
 <br><br>
