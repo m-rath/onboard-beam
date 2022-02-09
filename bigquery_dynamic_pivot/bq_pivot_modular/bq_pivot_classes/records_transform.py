@@ -24,7 +24,6 @@ class PivotRecords(beam.PTransform):
                 lambda x: "__".join([str(x[kfd]) for kfd in self.key_fds]))
             | beam.CombinePerKey(CollapsePivoted(), self.key_fds)
             | beam.ParDo(ReconstrElem(), self.key_fds)
-            # | beam.Map(fill_fields, AsSingleton(self.new_schema_list)) # try ParDo with AsSingleton(new_schema_STR)
             )
 
         return pivoted_records
@@ -48,11 +47,11 @@ class PivotRow(beam.DoFn):
 
 class CollapsePivoted(beam.CombineFn):
     """ 
-    accepts as side input list of 1 or more keyfields, of any type;
+    accepts as side input a list of 1 or more keyfields, of any type;
     sums all other fields, assumed numeric;
     
     TO-Do: accommodate string value_fields, 
-    but throw error if more than 1 distinct value
+    but throw error if more than 1 distinct value, or extend into list
     """
     def create_accumulator(self, keyfields):
         return {}
@@ -89,7 +88,7 @@ class CollapsePivoted(beam.CombineFn):
 class ReconstrElem(beam.DoFn):
     """
     two-tuple to dict
-    Tup[int, dict] --> Dict
+    Tup[int, dict] -> Dict
 
     TO-DO: keyfield values cast to string for new column headings
     reconstruct as string, even if int to begin; fix that 

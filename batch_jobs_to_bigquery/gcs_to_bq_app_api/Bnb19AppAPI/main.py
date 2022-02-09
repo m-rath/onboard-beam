@@ -18,8 +18,6 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def neighbourhood_query():
-
-    # if request.method == "GET":
     
     nhood = request.args.get("neighbourhood", "Bayside")
 
@@ -31,10 +29,7 @@ def neighbourhood_query():
                 
         return jsonify({'error': 'neighbourhood not found'})
 
-        # return jsonify({'status': 'Success'}), 200
-
 
 @app.route('/_ah/warmup')
 def warmup():
-    # Handle your warmup logic here, e.g. set up a database connection pool
     return '', 200, {}

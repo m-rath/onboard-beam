@@ -1,0 +1,27 @@
+<html>
+    <nav>
+    <a href="/"><span>What are people tweeting about {{ QUERY }}?</span></a>
+    <div>
+    <!-- <a href="/revise_query" class="button">Revise_Query</a> -->
+    </div>
+    </nav>
+<body>
+<h2>The Twitter Pulse App watches tweets while you work.</h2>
+<table>
+    <thead>
+        <tr>
+          <th>vader compound score</th>
+          <th>tweet</th>
+        </tr>
+    </thead>
+    <tbody
+        {% for compound, tweet in web_iter %}
+        <tr>
+            <td>{{ compound }}</td>
+            <td>{{ tweet }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

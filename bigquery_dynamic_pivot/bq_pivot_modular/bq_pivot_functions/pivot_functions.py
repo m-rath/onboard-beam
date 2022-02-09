@@ -1,11 +1,10 @@
 
 import os
-# from dotenv import load_dotenv
 from typing import List, Dict
 from apache_beam.io.gcp.bigquery_tools import BigQueryWrapper
 from apache_beam.io.gcp.bigquery_tools import get_table_schema_from_string
 
-# load_dotenv()
+
 PROJECT_ID = os.getenv('PROJECT_ID')
 
 def validate_table(args):
@@ -41,13 +40,12 @@ def fill_fields(elem, new_schema_list):
     e = {}
     for field_schema in new_schema_list:
         field_name = field_schema.split(":")[0]
-        if field_name in elem:          #MPTypeError: unhashable type: 'list' [while running 'PivotRecords/Map(fill_fields)/Map(fill_fields)']
+        if field_name in elem:
             e[field_name] = elem[field_name]
         else:
             e[field_name] = ""
     return e
-    # field_name = field_schema.split(":")[0]
-# AttributeError: 'list' object has no attribute 'split' [while running 'PivotRecords/Map(fill_fields)/Map(fill_fields)'] 
+ 
 def schema_fn(destination, schema_str):
     """ structured to Beam's liking """
     return get_table_schema_from_string(schema_str)
