@@ -1,3 +1,4 @@
+
 runtime: python38
 env: standard
 instance_class: B1
@@ -5,13 +6,16 @@ handlers:
   - url: .*
     script: auto
 env_variables:
-  PROJECT_ID: practice-springml
-  BUCKET: practice-springml.appspot.com
+  PROJECT_ID: practice-springml-east
+  BUCKET: practice-springml-east.appspot.com
   QUERY: tesla OR TSLA
 basic_scaling:
   max_instances: 3
   idle_timeout: 5m
-network: {}
-service_account: practice-springml@appspot.gserviceaccount.com
 
-entrypoint: gunicorn -b :$PORT -w 1 main:app
+network: {}
+service_account: practice-springml-east@appspot.gserviceaccount.com
+
+entrypoint: gunicorn -b :8080 -w 1 main:app
+inbound_services:
+- warmup

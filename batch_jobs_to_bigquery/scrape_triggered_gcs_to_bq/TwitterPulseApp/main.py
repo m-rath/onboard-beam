@@ -21,16 +21,17 @@ import os
 import time
 from datetime import datetime
 import pandas as pd
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from google.cloud import storage
-from .twitter_client import TwitterConn
-from .nlp_tools import VaderTweets, SpacyTweets
+from twitter_client import TwitterConn
+from nlp_tools import VaderTweets, SpacyTweets
 
 
 BUCKET = os.getenv("BUCKET")
 QUERY = os.getenv("QUERY")
 
 app = Flask(__name__)
+
 
 @app.route('/', methods = ["GET", "POST"])
 def root():
@@ -61,7 +62,7 @@ def root():
         blob = bucket.blob('twitter_pulse ' + stamp + '.csv')
         blob.upload_from_string(wide_df.to_csv())
 
-        time.sleep(600)
+        # time.sleep(600)
         i += 1
 
         # -----Extra step for display in browser----
@@ -69,4 +70,9 @@ def root():
 
 
     return render_template(
-        "base.html", title = "home", QUERY = QUERY, web_iter = web_iter)
+        "base.html", title = "home", QUERY = QUERY, web_iter = web_iter), 200
+
+
+@app.route('/_ah/warmup')
+def warmup():
+    return '', 200, {}
