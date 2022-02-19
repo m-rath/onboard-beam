@@ -1,5 +1,7 @@
 """ Natural Language Processing, esp sentiment, for Tweet series """
 
+import re
+import numpy as np
 import pandas as pd
 import en_core_web_sm
 from spacytextblob.spacytextblob import SpacyTextBlob
@@ -31,11 +33,18 @@ class SpacyTweets(object):
             polarity.append(doc._.polarity)
             subjectivity.append(doc._.subjectivity)
             word_sample.append([a[0][0] for a in doc._.assessments])
-            tok2vec.append(doc.vector)
+            # vec = re.sub('\s{2}', ',', str(doc.vector))
+            vec = []
+            for flt in np.nditer(doc.vector):
+                vec.append(np.format_float_positional(flt))
+            tok2vec.append(vec)
 
         spacy_df = pd.DataFrame(
             zip(polarity, subjectivity, word_sample, tok2vec), 
             columns=["polarity","subjectivity","word_sample","tok2vec"])
+
+        # spacy_df['tok2vec'] = spacy_df['tok2vec'].apply(
+        #     lambda vec: str(vec).replace('\s', ','))
 
         return spacy_df
 

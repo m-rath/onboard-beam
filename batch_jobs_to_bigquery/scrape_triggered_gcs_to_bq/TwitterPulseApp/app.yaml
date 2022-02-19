@@ -14,8 +14,11 @@ basic_scaling:
   idle_timeout: 5m
 
 network: {}
+# vpc_access_connector:
+#   name: "projects/practice-springml-east/locations/us-east1/connectors/east-serverless-connector"
+#   egress_setting: all-traffic
 service_account: practice-springml-east@appspot.gserviceaccount.com
 
-entrypoint: gunicorn -b :8080 -w 1 main:app
+entrypoint: gunicorn -b :$PORT -w 1 main:app
 inbound_services:
 - warmup

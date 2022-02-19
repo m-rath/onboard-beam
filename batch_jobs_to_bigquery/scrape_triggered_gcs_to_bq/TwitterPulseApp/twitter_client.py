@@ -1,5 +1,6 @@
 """ Establish connection with Twitter API """
 
+import re
 import os
 import pandas as pd
 from google.cloud import secretmanager
@@ -28,6 +29,11 @@ TOKEN_SECRET = retrieve_secret(
     client, PROJECT_ID, "TWITTER_ACCESS_TOKEN_SECRET")
 BEARER_TOKEN = retrieve_secret(client, PROJECT_ID, "TWITTER_BEARER_TOKEN")
 
+
+def clean(twt):
+    twt = twt.encode('ascii', 'ignore').decode('utf-8')
+    twt = re.sub('\s{2,}', ' ', twt)
+    return twt
 
 class TwitterConn(object):
 
@@ -66,4 +72,10 @@ class TwitterConn(object):
             }
             rows.append(row)
 
-        return pd.DataFrame(rows)
+        tweet_df = pd.DataFrame(rows)
+
+        # remove newlines from tweets
+        tweet_df['tweet'] = tweet_df['tweet'].apply(clean)
+            #  lambda x: x.replace('\n', ' '))
+
+        return tweet_df

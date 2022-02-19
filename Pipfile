@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 google-cloud-bigquery = "*"
-apache-beam = {extras = ["gcp","interactive"], version = "*"}
+apache-beam = {extras = ["gcp"], version = "*"}
 ipykernel = "*"
 pandas = "*"
 

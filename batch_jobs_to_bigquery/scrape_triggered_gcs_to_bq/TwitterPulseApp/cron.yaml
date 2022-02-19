@@ -1,4 +1,4 @@
 cron:
-- description: "daily summary job"
-  url: /  #https://practice-springml-east.ue.r.appspot.com/
-  schedule: every 10 hours
+- description: "how about now?"
+  url: /
+  schedule: every 11 hours

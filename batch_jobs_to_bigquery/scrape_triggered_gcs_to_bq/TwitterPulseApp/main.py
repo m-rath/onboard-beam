@@ -18,10 +18,9 @@ and the App Admin API is enabled for patch updates of QUERY string.
 """
 
 import os
-import time
 from datetime import datetime
 import pandas as pd
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template
 from google.cloud import storage
 from twitter_client import TwitterConn
 from nlp_tools import VaderTweets, SpacyTweets
@@ -39,35 +38,24 @@ def root():
     conn = TwitterConn()
     storage_client = storage.Client()
 
-    i = 0
-    while i < 1:
+    # -----Scrape twitter------
+    tweet_df = conn.search()
 
-        tweet_df = conn.search()
+    # -----Analyze tweets------
+    vt = VaderTweets(tweet_df.tweet)
+    vader_df = vt.analyze()
+    st = SpacyTweets(tweet_df.tweet)
+    spacy_df = st.analyze()
+    wide_df = pd.concat([vader_df, spacy_df, tweet_df], axis = 1)
 
-        tweet_df['tweet'] = tweet_df.tweet.apply(
-            lambda x: x.replace('\n', ' '))
+    # -----Write to bucket-----
+    bucket = storage_client.bucket(BUCKET)
+    stamp = datetime.now().strftime("%Y-%m-%d %H%M%S")
+    blob = bucket.blob('twitter_pulse ' + stamp + '.csv')
+    blob.upload_from_string(wide_df.to_csv())
 
-        # -----NLP stuff-----
-        vt = VaderTweets(tweet_df.tweet)
-        vader_df = vt.analyze()
-
-        st = SpacyTweets(tweet_df.tweet)
-        spacy_df = st.analyze()
-        
-        wide_df = pd.concat([tweet_df, vader_df, spacy_df], axis = 1)
-
-        # -----Write to bucket-----
-        bucket = storage_client.bucket(BUCKET)
-        stamp = datetime.now().strftime("%Y-%m-%d %H%M%S")
-        blob = bucket.blob('twitter_pulse ' + stamp + '.csv')
-        blob.upload_from_string(wide_df.to_csv())
-
-        # time.sleep(600)
-        i += 1
-
-        # -----Extra step for display in browser----
-        web_iter = zip(wide_df.compound, wide_df.tweet)
-
+    # -----Browser view-------
+    web_iter = zip(wide_df.compound, wide_df.tweet)
 
     return render_template(
         "base.html", title = "home", QUERY = QUERY, web_iter = web_iter), 200
