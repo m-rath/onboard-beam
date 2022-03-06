@@ -1,0 +1,42 @@
+{
+    "name": "Streaming beam Python flex template",
+    "description": "Streaming beam example for python flex template.",
+    "parameters": [
+      {
+        "name": "input_sub",
+        "label": "Input PubSub subscription.",
+        "helpText": "Name of the input PubSub subscription to consume from.",
+        "isOptional": true,
+        "regexes": [
+          "[a-zA-Z][-_.~+%a-zA-Z0-9]{2,}"
+        ]
+      },
+      {
+        "name": "output_topic",
+        "label": "Sink PubSub topic.",
+        "helpText": "Name of the PubSub topic.",
+        "isOptional": true,
+        "regexes": [
+          "([^:]+:)?[^.]+[.].+"
+        ]
+      },
+      {
+        "name": "secret",
+        "label": "Secret holding hashkey.",
+        "helpText": "Name of secret in Secret Manager with hashkey payload.",
+        "isOptional": true
+      },
+      {
+        "name": "salt",
+        "label": "Salt for hashing SSNs.",
+        "helpText": "Salt used to distinguish SSNs hashed here from same in rainbow tables.",
+        "isOptional": true
+      },
+      {
+        "name": "collection",
+        "label": "Firestore collection name.",
+        "helpText": "Name of the DocDB collection with known hashed SSNs.",
+        "isOptional": true
+      }
+    ]
+  }

@@ -1,0 +1,55 @@
+expected_valid_socials = 19
+invalid_no_num = 17
+invalid_with_fake_ssn = 14
+valid_ssn_line = 9
+valid_ssn_with_fake = 10
+My social is 347-17-9110
+My social is 843-73-2001
+My account number is 831245236
+My account number is 458805750
+My account number is 422603935 and my ssn is 498238707
+My social is 577-54-7089
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 354749387 and my ssn is 628495280
+My name is Inigo Montoya, you killed my father, prepare to die!
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 778256259 and my ssn is 068864377
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 176790041
+My name is Inigo Montoya, you killed my father, prepare to die!
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 518079831 and my ssn is 757111611
+My social is 770-69-0464
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 680971256
+My account number is 457111060 and my ssn is 892209802
+My account number is 523759524
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 580579483 and my ssn is 514362269
+My account number is 542193027
+My account number is 698425191 and my ssn is 035220082
+My name is Inigo Montoya, you killed my father, prepare to die!
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 027560777
+My account number is 818757858
+My social is 498-25-7369
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 610964482
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 000912538 and my ssn is 544169295
+My name is Inigo Montoya, you killed my father, prepare to die!
+My social is 230-91-7890
+My social is 758-58-4601
+My account number is 379216872
+My account number is 932552502 and my ssn is 077143257
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 948035016
+My social is 380-78-6949
+My account number is 597059016
+My account number is 626258958 and my ssn is 744210401
+My social is 544-59-8660
+My account number is 261365090
+My name is Inigo Montoya, you killed my father, prepare to die!
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 396180291
+My name is Inigo Montoya, you killed my father, prepare to die!

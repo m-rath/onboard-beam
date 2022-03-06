@@ -1,0 +1,10 @@
+expected_valid_socials = 3
+invalid_no_num = 2
+invalid_with_fake_ssn = 0
+valid_ssn_line = 0
+valid_ssn_with_fake = 3
+My account number is 076869055 and my ssn is 302863647
+My name is Inigo Montoya, you killed my father, prepare to die!
+My account number is 681923563 and my ssn is 558302364
+My account number is 012144010 and my ssn is 139561681
+My name is Inigo Montoya, you killed my father, prepare to die!
