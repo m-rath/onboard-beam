@@ -8,6 +8,8 @@ google-cloud-bigquery = "*"
 apache-beam = {extras = ["gcp"], version = "*"}
 ipykernel = "*"
 pandas = "*"
+google-cloud-secret-manager = "*"
+google-cloud-firestore = "*"
 
 [dev-packages]
 
