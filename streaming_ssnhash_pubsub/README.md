@@ -21,6 +21,10 @@ remaining doubts:
 
 ___
 
+![imgs/architecture_diagram.svg](./imgs/architecture_diagram.svg)
+
+___
+
 Cloud Function deployment:
 ```
 gcloud functions deploy dlp_scan_gcs ^
@@ -101,7 +105,7 @@ firestore docs recommend streaming, if requests are in parallel <br>
 NB: The gcp terraform deployment raised a couple questions answered [here](https://binx.io/blog/2020/07/06/enabling-firestore-from-terraform/). For example, why is App Engine required? (I ran into errors while trying to reproduce the gcp pro services' repo, and one required that I enable App Engine) <br><br>
 
 MPNB: <br>
---staging-location "gs://ssnhash-temp" <-- error <br>
+--staging-location "gs://ssnhash-temp" <-- error, Invalid storage object <br>
 --staging-location "gs://ssnhash-temp/tmp" <-- ok <br>
 "gs://ssnhash-temp" <-- bucket <br>
 "gs://ssnhash-temp/tmp" <-- storage object <br>
